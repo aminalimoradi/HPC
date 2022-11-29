@@ -1,0 +1,16 @@
+Comments on Assignment 1 by Amin Alimoradi.
+Final score: 70/100.
+
+General: You missed the fact that the OMP parallel version of the matrix product code is not actually being used. If you would have carefully considered the lack of speed-up (when using gfortran) you would have caught that. Going forward, more carefully interpret your results and use them to find and eliminate mistakes in the code, compilation or execution. 
+
+Report:
+* Keep working on your English. It is much better than in the first draft but there is a lot of room for improvement. In the least, use a spell checker and carefully read over the text looking for missing particles, capitalization, punctuation and so forth. It may also help to read it out loud to yourself.
+* For including bits of code, such as the command used to run or compile, use the \verb+\verbatim+ environment, preferably on a separate line. 
+* In the tables, some numbers are unclear. What does a percentage mean when measuring CPU usage? Why is it close to $1/4$ without parallel processing? Are you sue "No optimization" means no optimization is done? Most compilers use a default optimization level greater than zero if you do not specify the level.
+* In your list of wall times there is no real speed-up with multiple threads. You should comment on that. For Ifort, the serial time is just too short for the parallelization to be effective. Why is there no speed-up for gfortran? See below.
+* "Zero refers to very close number to zero" Yes, what happened there is probably that the code was running for a time too short for the System Monitor to update - it usually does so every couple of seconds. If you see that a number does no make sense, do not include it in the report. Either explain why a number is missing or change the code (size of the matrix) so that you are able to measure it properly.
+* "blas library is optimized with most of the computers" Be precise. Are you sure that the majority of the world's computers have BLAS installed? You probably mean to say that all Unix/Linux systems have it - or have a way to install it quickly and for free.
+* Is the difference in memory usage significant? No matter how the product is computed exactly, three $n\times n$ arrays are stored. There could be a difference depending on the compiler or optimization level, but I doubt if it is meaningful
+* "and parallelize programs are difficult and time consuming." Actually, making this one parallel was a matter of adding two or three lines and a compiler option!
+Code:
+* You add \verb+matrix_subroutine.f90+ to the list of files to compile, but you do not call the subroutine \verb+matrix_mul+ in the main code! That function is never executed, so no OMP is actually used. You should either include OMP directives in the main code or replace the matrix product computation in the main code by a call to \verb+matrix_mul+.
